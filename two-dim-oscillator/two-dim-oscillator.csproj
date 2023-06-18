@@ -9,8 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="icons\unn_logo.ico" />
+    <None Remove="icons\unn_logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
     <PackageReference Include="ScottPlot.WPF" Version="4.1.64" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="icons\unn_logo.ico" />
+    <Resource Include="icons\unn_logo.png" />
   </ItemGroup>
 
 </Project>

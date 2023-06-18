@@ -3,113 +3,176 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:two_dim_oscillator"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+
         mc:Ignorable="d"
         Title="Моделирование двумерного осциллятора на 2-х пружинках"
         RenderOptions.BitmapScalingMode="HighQuality"
-        WindowState="Maximized" 
+        WindowState="Maximized"
         FontSize="13"
-        FontFamily="JetBrains Mono">
-    
-    <Grid>
+        FontFamily="JetBrains Mono"
+        Loaded="OnLoadedMainWindow">
+
+    <Grid Margin="4 0 0 0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="5*" />
             <ColumnDefinition Width="3.5*" />
         </Grid.ColumnDefinitions>
-        
+
         <StackPanel Grid.Column="0">
-            <GroupBox Header="Параметры системы">
+            <GroupBox Header="Параметры системы" BorderBrush="LightGray">
                 <StackPanel>
                     <WrapPanel HorizontalAlignment="Right">
                         <Label>Коэф. жёсткости пружин, K:</Label>
-                        <xctk:IntegerUpDown Name="NudK" TextAlignment="Right" Width="100" Height="25" Minimum="0.5" Maximum="100" Increment="1" Value="50"/>
+                        <xctk:DoubleUpDown Name="NudK"
+                                           TextAlignment="Right" Width="100" Height="25"
+                                           Minimum="0.5" Maximum="100" Increment="1" Value="50" />
                     </WrapPanel>
                     <WrapPanel HorizontalAlignment="Right">
                         <Label>Масса тела, m:</Label>
-                        <xctk:IntegerUpDown Name="NudM" TextAlignment="Right" Width="100" Height="25" Minimum="1" Maximum="100" Increment="1" Value="5"/>
+                        <xctk:DoubleUpDown Name="NudM"
+                                           TextAlignment="Right" Width="100" Height="25"
+                                           Minimum="1" Maximum="100" Increment="1" Value="5" />
+                    </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Right">
+                        <Label>Длина пружинки, L:</Label>
+                        <xctk:DoubleUpDown Name="NudL"
+                                           TextAlignment="Right" Width="100" Height="25"
+                                           Minimum="1" Maximum="100" Increment="1" Value="10" />
                     </WrapPanel>
                     <WrapPanel HorizontalAlignment="Right">
                         <Label>Шаг по времени, dt:</Label>
-                        <xctk:DoubleUpDown Name="NudDt" TextAlignment="Right" Width="100" Height="25" Minimum="0.001" Maximum="1" Increment="0.001" Value="0.01"/>
+                        <xctk:DoubleUpDown Name="NudDt"
+                                           TextAlignment="Right" Width="100" Height="25"
+                                           Minimum="0.001" Maximum="1" Increment="0.001" Value="0.01" />
                     </WrapPanel>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Начальные условия">
+
+            <GroupBox Header="Начальные условия" BorderBrush="LightGray">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    
+
                     <StackPanel Grid.Column="0" HorizontalAlignment="Left">
                         <WrapPanel>
                             <Label>X₀:</Label>
-                            <xctk:DoubleUpDown Name="NudX0" TextAlignment="Right" Width="100" Height="25" Minimum="0.5" Maximum="100" Increment="1" Value="50"/>
+                            <xctk:DoubleUpDown Name="NudX0"
+                                               TextAlignment="Right" Width="100" Height="25"
+                                               Minimum="0.5" Maximum="100" Increment="1" Value="50" />
                         </WrapPanel>
                         <WrapPanel>
                             <Label>Y₀:</Label>
-                            <xctk:DoubleUpDown Name="NudY0" TextAlignment="Right" Width="100" Height="25" Minimum="0.5" Maximum="100" Increment="1" Value="50"/>
+                            <xctk:DoubleUpDown Name="NudY0"
+                                               TextAlignment="Right" Width="100" Height="25"
+                                               Minimum="0.5" Maximum="100" Increment="1" Value="50" />
                         </WrapPanel>
-                    </StackPanel>    
-                    
+                    </StackPanel>
+
                     <StackPanel Grid.Column="1" HorizontalAlignment="Right">
                         <WrapPanel>
                             <Label>Vx₀:</Label>
-                            <xctk:DoubleUpDown Name="NudVx0" TextAlignment="Right" Width="100" Height="25" Minimum="0.5" Maximum="100" Increment="1" Value="50"/>
+                            <xctk:DoubleUpDown Name="NudVx0"
+                                               TextAlignment="Right" Width="100" Height="25"
+                                               Minimum="0.5" Maximum="100" Increment="1" Value="50" />
                         </WrapPanel>
                         <WrapPanel>
                             <Label>Vy₀:</Label>
-                            <xctk:DoubleUpDown Name="NudVy0" TextAlignment="Right" Width="100" Height="25" Minimum="0.5" Maximum="100" Increment="1" Value="50"/>
+                            <xctk:DoubleUpDown Name="NudVy0"
+                                               TextAlignment="Right" Width="100" Height="25"
+                                               Minimum="0.5" Maximum="100" Increment="1" Value="50" />
                         </WrapPanel>
-                    </StackPanel>    
+                    </StackPanel>
                 </Grid>
             </GroupBox>
-            
-            <GroupBox Header="Дополнительные условия">
-                
+
+            <Expander Header="Дополнительные условия">
+                <Border BorderThickness="1" CornerRadius="4" Padding="5" BorderBrush="LightGray">
+                    <StackPanel>
+                        <Label HorizontalAlignment="Left">Изменение импульса тела на величину P:</Label>
+                        <xctk:DoubleUpDown Name="NudP"
+                                           HorizontalAlignment="Left" TextAlignment="Right" Width="100" Height="25" Margin="0 0 0 5"
+                                           Minimum="-100" Maximum="100" Increment="1" Value="0" />
+                        <RadioButton Name="RbNone" IsChecked="True">Без изменений</RadioButton>
+                        <RadioButton Name="RbForward">В направлении движения</RadioButton>
+                        <RadioButton Name="RbBack">Против движения</RadioButton>
+                        <RadioButton Name="RbRigth">В положительном направлении оси Х</RadioButton>
+                    </StackPanel>
+                </Border>
+            </Expander>
+
+            <GroupBox Header="Выходные параметры" BorderBrush="LightGray">
+                <StackPanel>
+                    <Label>Период колебания по оси Х, c:</Label>
+                    <WrapPanel HorizontalAlignment="Right">
+                        <Label>Теоретический:</Label>
+                        <Label Name="TbTheorPeriod"
+                               Content="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Right"
+                               Width="100" Height="25"
+                               BorderBrush="DarkGray" BorderThickness="1" />
+                    </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Right">
+                        <Label>Практический:</Label>
+                        <Label Name="TbPractPeriod"
+                               Content="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Right"
+                               Width="100" Height="25"
+                               BorderBrush="DarkGray" BorderThickness="1" />
+                    </WrapPanel>
+                </StackPanel>
             </GroupBox>
-            
-            <GroupBox Header="Выходные параметры">
-                
+
+            <GroupBox>
+                <Grid Margin="0 4 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Name="BtnStart" Height="25" Click="OnClickButtonStart">Пуск</Button>
+                    <Button Grid.Column="1" Name="BtnStop" Height="25" IsEnabled="False" Click="OnClickButtonStop">Стоп</Button>
+                    <Button Grid.Column="2" Name="BtnReset" Height="25" IsEnabled="False" Click="OnClickButtonReset">Сброс</Button>
+                </Grid>
             </GroupBox>
         </StackPanel>
-        
+
         <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
-            <Canvas Grid.Column="0" Grid.Row="0"/>
-            <WpfPlot Grid.Column="1" Grid.Row="0" Name="ChartYx" FontFamily="JetBrains Mono"/>
-            <WpfPlot Grid.Column="0" Grid.Row="1" Name="ChartPhaseTrajX" FontFamily="JetBrains Mono"/>
-            <WpfPlot Grid.Column="1" Grid.Row="1" Name="ChartPhaseTrajY" FontFamily="JetBrains Mono"/>
+
+            <Canvas Grid.Column="0" Grid.Row="0" />
+            <WpfPlot Grid.Column="1" Grid.Row="0" Name="ChartYx" FontFamily="JetBrains Mono" />
+            <WpfPlot Grid.Column="0" Grid.Row="1" Name="ChartPhaseTrajX" FontFamily="JetBrains Mono" />
+            <WpfPlot Grid.Column="1" Grid.Row="1" Name="ChartPhaseTrajY" FontFamily="JetBrains Mono" />
         </Grid>
-        
+
         <StackPanel Grid.Column="2">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                
-                    <WpfPlot Grid.Row="0" Name="ChartPosX" FontFamily="JetBrains Mono"/>
-                    <WpfPlot Grid.Row="1" Name="ChartPosY" FontFamily="JetBrains Mono"/>    
-                    <WpfPlot Grid.Row="2" Name="ChartFe" FontFamily="JetBrains Mono"/>
-                    <WpfPlot Grid.Row="3" Name="ChartPe1" FontFamily="JetBrains Mono"/>
-                    <WpfPlot Grid.Row="4" Name="ChartPe2" FontFamily="JetBrains Mono"/>
-                    <WpfPlot Grid.Row="5" Name="ChartKe" FontFamily="JetBrains Mono"/>
-                </Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <WpfPlot Grid.Row="0" Name="ChartPosX" FontFamily="JetBrains Mono" />
+                <WpfPlot Grid.Row="1" Name="ChartPosY" FontFamily="JetBrains Mono" />
+                <WpfPlot Grid.Row="2" Name="ChartFe" FontFamily="JetBrains Mono" />
+                <WpfPlot Grid.Row="3" Name="ChartPe1" FontFamily="JetBrains Mono" />
+                <WpfPlot Grid.Row="4" Name="ChartPe2" FontFamily="JetBrains Mono" />
+                <WpfPlot Grid.Row="5" Name="ChartKe" FontFamily="JetBrains Mono" />
+            </Grid>
         </StackPanel>
     </Grid>
 </Window>

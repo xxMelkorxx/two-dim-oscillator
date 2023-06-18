@@ -1,15 +1,24 @@
 ﻿namespace two_dim_oscillator;
 
-class RungeKutta
+public class RungeKutta
 {
+    /// <summary>
+    /// Коэффициент жётскости пружинок.
+    /// </summary>
     public double K { get; set; }
 
+    /// <summary>
+    /// Масса тела.
+    /// </summary>
     public double M { get; set; }
 
+    /// <summary>
+    /// Длина пружинки.
+    /// </summary>
     public double L { get; set; }
     
     /// <summary>
-    /// Система дифференциальных уравнений.
+    /// Система дифференциальных уравнений системы.
     /// </summary>
     /// <param name="p">Координата</param>
     /// <param name="i"></param>
@@ -36,12 +45,12 @@ class RungeKutta
     /// <summary>
     /// Решение системы из 2-х дифференциальных уравнений методом Рунге-Кутты 4-ого порядка.
     /// </summary>
-    /// <param name="currPos"></param>
-    /// <param name="currVel"></param>
-    /// <param name="dt"></param>
-    /// <param name="nextPos"></param>
-    /// <param name="nextVel"></param>
-    public void DSolve(PointD currPos, PointD currVel, double dt, out PointD nextPos, out PointD nextVel)
+    /// <param name="currPos">Текущее координата тела.</param>
+    /// <param name="currVel">Текущая скорость тела.</param>
+    /// <param name="dt">Шаг по времени.</param>
+    /// <param name="nextPos">Новая координата тела.</param>
+    /// <param name="nextVel">Новая скорость тела.</param>
+    public void NextStep(PointD currPos, PointD currVel, double dt, out PointD nextPos, out PointD nextVel)
     {
         var kx1 = DiffFunc(currPos, 0) * dt;
         var ky1 = DiffFunc(currPos, 1) * dt;
@@ -59,13 +68,13 @@ class RungeKutta
     /// <summary>
     /// Расчёт энергий системы.
     /// </summary>
-    /// <param name="pos"></param>
-    /// <param name="vel"></param>
-    /// <param name="pe1"></param>
-    /// <param name="pe2"></param>
-    /// <param name="ke"></param>
-    /// <param name="fe"></param>
-    public void Energy(PointD pos, PointD vel, out double pe1, out double pe2, out double ke, out double fe)
+    /// <param name="pos">Координата тела.</param>
+    /// <param name="vel">Скорость тела.</param>
+    /// <param name="pe1">Потенциальная энергия 1-ой пружины.</param>
+    /// <param name="pe2">Потенциальная энергия 2-ой пружины.</param>
+    /// <param name="ke">Кинетическая энергия тела.</param>
+    /// <param name="fe">Полная энергия системы.</param>
+    public void GetEnergy(PointD pos, PointD vel, out double pe1, out double pe2, out double ke, out double fe)
     {
         var l1 = double.Sqrt((L - pos.X) * (L - pos.X) + pos.Y * pos.Y);
         var l2 = double.Sqrt((L + pos.X) * (L + pos.X) + pos.Y * pos.Y);
